@@ -1,10 +1,12 @@
 package com.github.alburnus;
 
+import com.github.alburnus.service.EmailService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,12 +18,14 @@ import java.util.regex.Pattern;
 @SpringBootTest
 public class FamilyMedicinesApplicationTests {
 
+    @Autowired
+    private EmailService emailService;
+
     @Test
     public void shouldReturnNumberOfPharmaciesWhereMedicineIsAvailable() {
         Document doc = null;
         try {
-            doc = Jsoup.connect("https://www.gdziepolek.pl/produkty/82436/vigantol-krople/apteki?" +
-                    "pvId=19703&Lng=18.64663840000003&Lat=54.35202520000001&Rad=15000&Loc=Gda%C5%84sk")
+            doc = Jsoup.connect("https://www.gdziepolek.pl/produkty/28209/euthyrox-n-150-tabletki/apteki?pvId=86240&Lng=18.64663840000003&Lat=54.35202520000001&Rad=15000&Loc=Gda%C5%84sk")
                     .get();
             Element meta = doc.select("meta").get(4);
             String content = meta.attr("content");
@@ -32,6 +36,8 @@ public class FamilyMedicinesApplicationTests {
 
             System.out.println(content);
             System.out.println("Count:" + count);
+
+            emailService.sendSimpleMessage("", "", "Count: " + count);
         } catch (IOException e) {
             e.printStackTrace();
         }
