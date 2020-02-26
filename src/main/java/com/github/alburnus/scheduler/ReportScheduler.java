@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @Slf4j
 public class ReportScheduler {
@@ -20,5 +22,17 @@ public class ReportScheduler {
         log.info("Running scheduler.");
         medicineReportService.getAndSaveReport();
         log.info("Stopped running scheduler.");
+    }
+
+    @Scheduled(initialDelay = 0, fixedDelay = Long.MAX_VALUE)
+    public void firstRun() {
+        log.info("First run for scheduler.");
+        medicineReportService.getAndSaveReport();
+        log.info("Finished first run for scheduler.");
+    }
+
+    @Scheduled(cron = "0 0 0/1 * * *")
+    public void serviceAlive() {
+        log.info("serviceAlive at [{}]", LocalDateTime.now());
     }
 }
