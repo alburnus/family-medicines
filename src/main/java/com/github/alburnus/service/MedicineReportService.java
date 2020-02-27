@@ -52,18 +52,18 @@ public class MedicineReportService {
             report.setMedicineRequestConfig(requestConfig);
 
             String message = requestConfig.getMedicine().getName() + " : " + countedResult;
-//            if (requestConfig.getThreshold() < countedResult) {
-//                emailService.sendSimpleMessage(
-//                        requestConfig.getEmail(),
-//                        "[INFO] Report",
-//                        message);
-//            } else {
-//                log.warn("Alert message for [{}]", requestConfig.getMedicine().getName());
-//                emailService.sendSimpleMessage(
-//                        requestConfig.getEmail(),
-//                        "[ALERT] Report",
-//                        message + ". Threshold is: " + requestConfig.getThreshold());
-//            }
+            if (requestConfig.getThreshold() < countedResult) {
+                emailService.sendSimpleMessage(
+                        requestConfig.getEmail(),
+                        "[INFO] Report",
+                        message);
+            } else {
+                log.warn("Alert message for [{}]", requestConfig.getMedicine().getName());
+                emailService.sendSimpleMessage(
+                        requestConfig.getEmail(),
+                        "[ALERT] Report",
+                        message + ". Threshold is: " + requestConfig.getThreshold());
+            }
 
             medicineReportRepository.save(report);
             log.info("Saved report for medicine [{}]", requestConfig.getMedicine().getName());
