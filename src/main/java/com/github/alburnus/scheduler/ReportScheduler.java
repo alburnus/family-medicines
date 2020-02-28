@@ -17,7 +17,7 @@ public class ReportScheduler {
         this.medicineReportService = medicineReportService;
     }
 
-    @Scheduled(cron = "0 0 12 * * *")
+    @Scheduled(cron = "0 0 0/3 * * *")
     public void reportCurrentTime() {
         log.info("Running scheduler.");
         medicineReportService.getAndSaveReport();

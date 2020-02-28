@@ -53,6 +53,7 @@ public class MedicineReportService {
 
             String message = requestConfig.getMedicine().getName() + " : " + countedResult;
             if (requestConfig.getThreshold() < countedResult) {
+                log.info("The medicine [{}] is in [{}] pharmacies", requestConfig.getMedicine().getName(), countedResult);
                 emailService.sendSimpleMessage(
                         requestConfig.getEmail(),
                         "[INFO] Report",
