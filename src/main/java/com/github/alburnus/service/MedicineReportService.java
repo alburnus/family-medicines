@@ -7,6 +7,7 @@ import com.github.alburnus.repository.MedicineRequestConfigRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class MedicineReportService {
             report.setMedicine(requestConfig.getMedicine());
             report.setResponse(response);
             report.setCreatedDate(LocalDateTime.now());
+            report.setReportDate(LocalDate.now());
             report.setMedicineRequestConfig(requestConfig);
 
             String message = requestConfig.getMedicine().getName() + " : " + countedResult;

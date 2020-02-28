@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,6 +21,8 @@ public class MedicineReport implements Serializable {
     private String response;
 
     private Long countedResult;
+
+    private LocalDate reportDate;
 
     @ManyToOne
     private Medicine medicine;
