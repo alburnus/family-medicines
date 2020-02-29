@@ -17,7 +17,7 @@ public class ReportScheduler {
         this.medicineReportService = medicineReportService;
     }
 
-    @Scheduled(cron = "0 0 0/3 * * *")
+    @Scheduled(cron = "${scheduler.cron.checkAvailability}")
     public void reportCurrentTime() {
         log.info("Running scheduler.");
         medicineReportService.getAndSaveReport();
@@ -31,7 +31,7 @@ public class ReportScheduler {
         log.info("Finished first run for scheduler.");
     }
 
-    @Scheduled(cron = "0 0 0/1 * * *")
+    @Scheduled(cron = "${scheduler.cron.serviceAlive}")
     public void serviceAlive() {
         log.info("serviceAlive at [{}]", LocalDateTime.now());
     }
