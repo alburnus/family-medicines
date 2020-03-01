@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -54,13 +54,8 @@ public class MedicineReportService {
             report.setMedicineRequestConfig(requestConfig);
 
             String message = requestConfig.getMedicine().getName() + " : " + countedResult;
-            if (requestConfig.getThreshold() < countedResult) {
-                log.info("The medicine [{}] is in [{}] pharmacies", requestConfig.getMedicine().getName(), countedResult);
-                emailService.sendSimpleMessage(
-                        requestConfig.getEmail(),
-                        "[INFO] Report",
-                        message);
-            } else {
+            log.info("The medicine [{}] is in [{}] pharmacies", requestConfig.getMedicine().getName(), countedResult);
+            if (requestConfig.getThreshold() >= countedResult) {
                 log.warn("Alert message for [{}]", requestConfig.getMedicine().getName());
                 emailService.sendSimpleMessage(
                         requestConfig.getEmail(),
@@ -71,5 +66,32 @@ public class MedicineReportService {
             medicineReportRepository.save(report);
             log.info("Saved report for medicine [{}]", requestConfig.getMedicine().getName());
         }
+    }
+
+    public void sendDailyReport() {
+        LocalDate today = LocalDate.now();
+        List<MedicineReport> reports = medicineReportRepository.getAllByReportDate(today);
+        Map<String, List<MedicineReport>> reportsGroupedByEmail = new HashMap<>();
+        reports.forEach(medicineReport -> {
+            String keyEmail = medicineReport.getMedicineRequestConfig().getEmail();
+            if (!reportsGroupedByEmail.containsKey(keyEmail)) {
+                reportsGroupedByEmail.put(medicineReport.getMedicineRequestConfig().getEmail(), new ArrayList<>());
+            }
+            List<MedicineReport> medicineReports = reportsGroupedByEmail.get(keyEmail);
+            medicineReports.add(medicineReport);
+            reportsGroupedByEmail.put(keyEmail, medicineReports);
+        });
+
+        reportsGroupedByEmail.forEach((s, medicineReports) -> {
+            StringBuilder messageBuilder = new StringBuilder();
+            medicineReports.forEach(medicineReport -> {
+                messageBuilder.append("Medicine: <b>" + medicineReport.getMedicine().getName() + "</b>" +
+                        " at: " + medicineReport.getCreatedDate() + " o'clock" +
+                        " was available in: <b>" + medicineReport.getCountedResult() + "</b> pharmacies. Threshold is: " +
+                        "<b>" + medicineReport.getMedicineRequestConfig().getThreshold() + "</b><br />");
+            });
+            log.info("Sending daily report");
+            emailService.sendMimeMessage(s, "Daily report", messageBuilder.toString());
+        });
     }
 }

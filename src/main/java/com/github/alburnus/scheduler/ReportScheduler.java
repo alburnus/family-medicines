@@ -18,10 +18,17 @@ public class ReportScheduler {
     }
 
     @Scheduled(cron = "${scheduler.cron.checkAvailability}")
-    public void reportCurrentTime() {
-        log.info("Running scheduler.");
+    public void checkCurrentAvailability() {
+        log.info("Running scheduler for current availability");
         medicineReportService.getAndSaveReport();
-        log.info("Stopped running scheduler.");
+        log.info("Finished running scheduler for current availability.");
+    }
+
+    @Scheduled(cron = "${scheduler.cron.dailyReport}")
+    public void runDailyReport() {
+        log.info("Running scheduler for daily report.");
+        medicineReportService.sendDailyReport();
+        log.info("Finished scheduler for daily report.");
     }
 
     @Scheduled(initialDelay = 0, fixedDelay = Long.MAX_VALUE)
