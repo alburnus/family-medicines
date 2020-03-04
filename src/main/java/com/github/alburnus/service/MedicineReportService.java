@@ -59,7 +59,7 @@ public class MedicineReportService {
                 log.warn("Alert message for [{}]", requestConfig.getMedicine().getName());
                 emailService.sendSimpleMessage(
                         requestConfig.getEmail(),
-                        "[ALERT] Report",
+                        "[ALERT] ReportResult",
                         message + ". Threshold is: " + requestConfig.getThreshold());
             }
 

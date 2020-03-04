@@ -1,6 +1,11 @@
 package com.github.alburnus.entity;
 
+import com.github.alburnus.entity.report.ReportResult;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -11,6 +16,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@TypeDefs({
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+})
 public class MedicineReport implements Serializable {
 
     @Id
@@ -23,6 +31,11 @@ public class MedicineReport implements Serializable {
     private Long countedResult;
 
     private LocalDate reportDate;
+
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    private ReportResult reportResult;
 
     @ManyToOne
     private Medicine medicine;

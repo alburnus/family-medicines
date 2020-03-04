@@ -14,7 +14,8 @@ public class MedicineRequestConfig implements Serializable {
     @SequenceGenerator(name = "medicine_req_conf_generator", sequenceName = "medicine_req_conf_seq", allocationSize = 1)
     private Long id;
 
-    private String source;
+    @Enumerated(EnumType.STRING)
+    private ResponseSource source;
 
     private String url;
 
