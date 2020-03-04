@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class WhereMedicineMapperIT {
@@ -42,8 +44,8 @@ public class WhereMedicineMapperIT {
 
         // When
         ReportResult reportResult = whereMedicineMapper.mapToResult(document);
-        // Then
 
-        //assertThat("").isEmpty();
+        // Then
+        assertThat(reportResult).isNotNull();
     }
 }
